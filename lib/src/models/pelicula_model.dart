@@ -72,6 +72,13 @@ class Pelicula {
       return 'https://image.tmdb.org/t/p/w300/$posterPath';
     }
   }
+  getBackgroundImg(){
+    if (posterPath==null) {
+      return 'https://linnea.com.ar/wp-content/uploads/2018/09/404PosterNotFound.jpg';
+    }else{
+      return 'https://image.tmdb.org/t/p/w300/$backdropPath';
+    }
+  }
 }
 
 
