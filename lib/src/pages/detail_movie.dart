@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/src/models/actor_model.dart';
 import 'package:peliculas/src/models/pelicula_model.dart';
+import 'package:peliculas/src/providers/actores_provider.dart';
+import 'package:peliculas/src/widget/actor_card_widget.dart';
 
 
 class DetailMovie extends StatelessWidget {
@@ -22,8 +25,12 @@ class DetailMovie extends StatelessWidget {
                 _descripcion( pelicula ),
                 _descripcion( pelicula ),
                 _descripcion( pelicula ),
-                _descripcion( pelicula ),
-                _descripcion( pelicula ),
+                Container(
+                  child: Text('Actores', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+                  padding: EdgeInsets.only(left: 20.0, bottom: 10.0),
+          
+                ),
+                _actores( pelicula ),
               ]
             ),
           ),
@@ -59,11 +66,14 @@ class DetailMovie extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: Image(
-              image: NetworkImage(pelicula.getPosterImg()),
-              height: 150.0,
+          Hero(
+            tag: pelicula.id_pelicula_card,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Image(
+                image: NetworkImage(pelicula.getPosterImg()),
+                height: 150.0,
+              ),
             ),
           ),
           SizedBox(width: 20.0,),
@@ -91,6 +101,41 @@ class DetailMovie extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       child: Text(pelicula.overview, textAlign: TextAlign.justify,),
+    );
+  }
+
+  Widget _actores(Pelicula pelicula) {
+    final actorProvider = new ActoresProvider();
+
+    return FutureBuilder(
+      future: actorProvider.getActores(pelicula.id.toString()),
+      // initialData: [],
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if (snapshot.hasData) {
+          return _crearActoresPageView( snapshot.data );
+        }else{
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+
+
+  }
+
+  Widget _crearActoresPageView(List<Actor> actores ) {
+    return Container(
+      height: 200.0,
+      child: PageView.builder(
+        pageSnapping: false,
+        itemCount: actores.length,
+        controller: PageController(
+          viewportFraction: 0.3,
+          initialPage: 1
+        ),
+        itemBuilder: (BuildContext context, idx){
+          return ActorCardWidget(actor: actores[idx]);
+        },
+      )
     );
   }
 }

@@ -21,17 +21,23 @@ class CardSwiperWidget extends StatelessWidget {
       child: Swiper(
         layout: SwiperLayout.STACK,
         itemWidth: _screenSize.width * 0.6,
-        itemBuilder: (BuildContext context,int index){
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: FadeInImage(
-              height: _screenSize.height *0.5,
-              image: NetworkImage( peliculas[index].getPosterImg() ),
-              placeholder: AssetImage('assets/img/loading.gif'),
-              fit: BoxFit.cover,
-            ),
-          ) ;
-          
+        itemBuilder: (BuildContext context, int index){
+          peliculas[index].id_pelicula_card = '${peliculas[index].id}-card-pelicula';
+          return Hero(
+              tag: peliculas[index].id_pelicula_card,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: GestureDetector(
+                  onTap: ()=>Navigator.pushNamed(context, 'detalle', arguments: peliculas[index]),
+                  child: FadeInImage(
+                    height: _screenSize.height *0.5,
+                    image: NetworkImage( peliculas[index].getPosterImg() ),
+                    placeholder: AssetImage('assets/img/loading.gif'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+          );
         },
         itemCount: peliculas.length,
         // pagination: new SwiperPagination(),

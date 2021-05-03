@@ -17,6 +17,9 @@ class Peliculas{
 }
 
 class Pelicula {
+
+  String id_pelicula_card;
+  
   int voteCount;
   int id;
   bool video;
